@@ -26,7 +26,9 @@ object Scuartz {
     val trigger = new SimpleTrigger
 
     detail.setJobClass((new Job {
-      def execute (context : JobExecutionContext) = f(context)
+      def execute (context : JobExecutionContext) = {
+        f(context)
+      }
     }).getClass)
 
     def as (name : String) : RichTrigger = {
@@ -48,6 +50,8 @@ object Scuartz {
     }
 
     def at (time : Long) : RichTrigger = at(new Date(time))
+
+    def after (interval : Long) : RichTrigger = at(new Date(System.currentTimeMillis + interval))
 
     def until (time : Date) : RichTrigger = {
       underlying.setEndTime(time)

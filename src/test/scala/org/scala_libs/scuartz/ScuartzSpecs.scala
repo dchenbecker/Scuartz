@@ -42,6 +42,26 @@ class ScuartzSpecs extends Specification with DetailedFailures {
 
     "schedule a job from a function" in {
       (sched.schedule {(() ⇒ { println("Tick!") }) as "ticker" every 1000l }).isExpectation
+      
+    }
+
+    "schedule a closure properly" in {
+      sched.start()
+
+      // Let's actually do something in this spec
+      var counter = 0
+      val incrementer = () => {
+        counter += 1
+        println("Counter = " + counter)
+      }
+
+      sched.schedule { incrementer as "incrementer" after 1000l every 100l repeat 5 }
+
+      Thread.sleep(3000l)
+
+      sched.shutdown()
+
+      counter must_== 5
     }
   }
 }
